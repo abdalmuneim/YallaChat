@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "576886383135",
+    "firebase_url": "https://yallachat-4f063-default-rtdb.firebaseio.com",
+    "project_id": "yallachat-4f063",
+    "storage_bucket": "yallachat-4f063.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576886383135:android:d2fcde82ec10371e73ab2a",
+        "android_client_info": {
+          "package_name": "com.yallachat.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "576886383135-9tqrl94toaqdlkhko520cbehjp6da0ee.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yallachat.user",
+            "certificate_hash": "cdd47cad187ae96e74463306c37e44c6235e4617"
+          }
+        },
+        {
+          "client_id": "576886383135-2td5tudeklpt2168efpesfuunmsonekr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmiAVRBoICLt7Au_TzV4-SyNCVPCStjI8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576886383135-2td5tudeklpt2168efpesfuunmsonekr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
