@@ -57,6 +57,9 @@ abstract class LocaleKeys {
   static const String imageValidation = 'imageValidation';
   static const String enterOTP = 'enterOTP';
 
+  /// Failure
+  static const String emptyCacheException = 'emptyCacheException';
+
   /// utils
   static const String gallery = 'gallery';
   static const String camera = 'camera';

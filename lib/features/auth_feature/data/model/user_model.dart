@@ -16,10 +16,7 @@ class UserModel extends User {
     super.blockedChats,
     super.blockedVoiceCall,
     super.blockedVideoCall,
-    this.token,
   });
-
-  final String? token;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -43,7 +40,6 @@ class UserModel extends User {
       userName: map[Fields.userName] as String,
       userPhone: map[Fields.userPhone] as String,
       userImage: map[Fields.userImage] as String,
-      token: map[Fields.token] != null ? map[Fields.token] as String : null,
       createdAt: map[Fields.createdAt] as String,
       aboutMe: map[Fields.aboutMe] as String,
       chattingWith: map[Fields.chattingWith] as String,

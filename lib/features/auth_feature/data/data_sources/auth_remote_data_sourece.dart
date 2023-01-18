@@ -8,13 +8,13 @@ import 'package:yalla_chat/core/resources/app_constants.dart';
 import 'package:yalla_chat/core/resources/toast_manager.dart';
 import 'package:yalla_chat/core/util/fields.dart';
 import 'package:yalla_chat/features/auth_feature/data/model/user_model.dart';
-import 'package:yalla_chat/features/auth_feature/domain/repositories/auth_collections.dart';
+import 'package:yalla_chat/features/auth_feature/data/data_sources/collections/auth_collections.dart';
 
 abstract class BaseAuthRemoteDataSource {
   Future<void> register({
     required String userPhone,
   });
-  Future<bool> verifyOTP({
+  Future<UserModel> verifyOTP({
     required String otp,
     required UserModel userModel,
   });
@@ -60,7 +60,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
   }
 
   @override
-  Future<bool> verifyOTP({
+  Future<UserModel> verifyOTP({
     required String otp,
     required UserModel userModel,
   }) async {
@@ -77,7 +77,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
       //Check if already Sign Up
       final QuerySnapshot resultQuery = await FirebaseFirestore.instance
           .collection(Fields.users)
-          .where(Fields.userId, isEqualTo: userModel.userId)
+          .where(Fields.id, isEqualTo: credential.user!.uid)
           .get();
 
       final List<DocumentSnapshot> documentSnapshot = resultQuery.docs;
@@ -91,11 +91,23 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         ToastManager.showError(LocaleKeys.welcomeBack.tr);
       }
     }
-    return credential.user != null ? true : false;
+    return UserModel.fromMap(UserModel(
+      userId: credential.user!.uid,
+      userName: userModel.userName,
+      userPhone: userModel.userPhone,
+      createdAt: userModel.createdAt,
+      userImage: userModel.userImage,
+      aboutMe: userModel.aboutMe,
+      chattingWith: userModel.chattingWith,
+      updateAt: userModel.updateAt,
+      blockedChats: userModel.blockedChats,
+      blockedVideoCall: userModel.blockedVideoCall,
+      blockedVoiceCall: userModel.blockedVoiceCall,
+    ).toMap());
   }
 
   /// add user to collection firebase
-  _addUserToCollection({
+  Future<void> _addUserToCollection({
     required String uid,
     required UserModel userModel,
   }) async {

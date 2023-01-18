@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 abstract class Failure {
   final String message;
 
@@ -18,7 +16,7 @@ class ServerFailure extends Failure {
 
 class ConnectionFailure extends Failure {
   const ConnectionFailure({
-    super.message = 'فشل الإتصال بالإنترنت',
+    super.message = 'Internet connection failed',
   });
 
   List<Object?> get props => [];
@@ -26,7 +24,7 @@ class ConnectionFailure extends Failure {
 
 class UnAuthenticatedFailure extends Failure {
   const UnAuthenticatedFailure({
-    super.message = "حسابك غير مسجل حاول تسجيل الدخول مرة اخرى.",
+    super.message = "Your account is not registered, try logging in again.",
   });
 
   List<Object?> get props => [];
@@ -34,15 +32,15 @@ class UnAuthenticatedFailure extends Failure {
 
 class NetworkFailure extends Failure {
   const NetworkFailure({
-    super.message = 'فشل الإتصال بالإنترنت',
+    super.message = 'Internet connection failed',
   });
 
   List<Object?> get props => [];
 }
 
 class EmptyCacheFailure extends Failure {
-  const EmptyCacheFailure({
-    super.message = 'تعذر العثور علي البيانات',
+  EmptyCacheFailure({
+    super.message = "The data could not be found",
   });
 
   List<Object?> get props => [];

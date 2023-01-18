@@ -18,7 +18,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static String initial = Routes.splash;
+  static String initial = Routes.register;
 
   /// initial rout
 

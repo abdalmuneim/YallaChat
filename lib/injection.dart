@@ -6,6 +6,7 @@ import 'package:yalla_chat/features/auth_feature/data/data_sources/auth_local_da
 import 'package:yalla_chat/features/auth_feature/data/data_sources/auth_remote_data_sourece.dart';
 import 'package:yalla_chat/features/auth_feature/data/repositories/auth_repository.dart';
 import 'package:yalla_chat/features/auth_feature/domain/repositories/base_auth_repository.dart';
+import 'package:yalla_chat/features/auth_feature/domain/use_case/get_user_use_case.dart';
 import 'package:yalla_chat/features/auth_feature/domain/use_case/otp_use_case.dart';
 import 'package:yalla_chat/features/auth_feature/domain/use_case/register_use_case.dart';
 import 'package:yalla_chat/features/auth_feature/domain/use_case/upload_image_file_use_case.dart';
@@ -21,6 +22,8 @@ Future<void> init() async {
       () => RegisterUseCase(baseAuthRepository: sl()));
   sl.registerLazySingleton<OTPUseCase>(
       () => OTPUseCase(baseAuthRepository: sl()));
+  sl.registerLazySingleton<GetUserUseCase>(
+      () => GetUserUseCase(baseAuthRepository: sl()));
 
   sl.registerLazySingleton<UploadImageFileUseCase>(
       () => UploadImageFileUseCase(baseAuthRepository: sl()));

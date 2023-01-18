@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:yalla_chat/core/cache_helper/cache_helper.dart';
 import 'package:yalla_chat/core/language/app_translations.dart';
 import 'package:yalla_chat/core/resources/app_constants.dart';
 import 'package:yalla_chat/core/resources/toast_manager.dart';
@@ -34,18 +33,13 @@ class OTPController extends GetxController {
   final Rx<Timer> _timer = Rx(Timer(Duration.zero, () {}));
 
   verifyCode() async {
-    print('----------------------------------------');
-
     isLoading = true;
     update();
     if (otp.value == '') {
-      print('-------------------- otp empty --------------------');
       isLoading = false;
       update();
       ToastManager.showError(LocaleKeys.enterOTP.tr);
     } else {
-      print('-------------------- otp not empty --------------------');
-
       final userImgURL = await _uploadImageFileUseCase(
           userPhone: phone, userImage: Get.arguments[Fields.userImage]);
 
@@ -75,8 +69,8 @@ class OTPController extends GetxController {
           isLoading = false;
           update();
         }, (success) async {
-          await CacheHelper.saveData(key: Fields.token, value: success);
-          success ? Get.offAllNamed(Routes.bottom) : Get.back();
+          print(success);
+          Get.offAllNamed(Routes.bottom);
           isLoading = false;
           update();
         });

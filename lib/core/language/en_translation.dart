@@ -47,6 +47,9 @@ final Map<String, String> en = {
   'otp': 'Error OTP',
   'enterOTP': 'Enter OTP NUMBER',
 
+  /// Failure
+  'emptyCacheException': "The data could not be found",
+
   /// utils
   'gallery': 'Gallery',
   'camera': 'Camera',

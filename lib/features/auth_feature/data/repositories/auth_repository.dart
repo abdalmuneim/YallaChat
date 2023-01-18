@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:yalla_chat/core/error/exceptions.dart';
 import 'package:yalla_chat/core/error/failures.dart';
 import 'package:yalla_chat/core/network/network_info.dart';
 import 'package:yalla_chat/features/auth_feature/data/data_sources/auth_local_data_source.dart';
 import 'package:yalla_chat/features/auth_feature/data/data_sources/auth_remote_data_sourece.dart';
 import 'package:yalla_chat/features/auth_feature/data/model/user_model.dart';
-import 'package:yalla_chat/features/auth_feature/domain/entities/user.dart';
 import 'package:yalla_chat/features/auth_feature/domain/repositories/base_auth_repository.dart';
 
 class AuthRepository implements BaseAuthRepository {
@@ -33,33 +33,43 @@ class AuthRepository implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> verifyOTP({
+  Future<Either<Failure, UserModel>> verifyOTP({
     required String otp,
     required UserModel userModel,
   }) async {
     if (await networkInfo.isConnected) {
-      await baseAuthRemoteDataSource.verifyOTP(otp: otp, userModel: userModel);
-      return const Right(true);
+      final UserModel user = await baseAuthRemoteDataSource.verifyOTP(
+          otp: otp, userModel: userModel);
+
+      await baseAuthLocalDataSource.writeUser(user: user);
+      await baseAuthLocalDataSource.writeToken(token: user.userId);
+
+      return Right(user);
     } else {
       return const Left(NetworkFailure());
     }
   }
 
   @override
-  Future<Either<Failure, User>> getUser() {
-    // TODO: implement getUser
+  Future<Either<Failure, bool>> login() {
+    // TODO: implement login
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, UserModel>> getUser() async {
+    try {
+      final user = await baseAuthLocalDataSource.readUser();
+
+      return Right(user);
+    } on EmptyCacheException {
+      return Left(EmptyCacheFailure());
+    }
   }
 
   @override
   Future<Either<Failure, Unit>> logOut() {
     // TODO: implement logOut
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, Unit>> login() {
-    // TODO: implement login
     throw UnimplementedError();
   }
 

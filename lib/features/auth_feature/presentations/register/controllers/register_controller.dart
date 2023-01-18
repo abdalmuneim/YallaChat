@@ -10,13 +10,12 @@ import 'package:yalla_chat/core/util/utils.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yalla_chat/features/auth_feature/domain/repositories/authentication_repository.dart';
 import 'package:yalla_chat/features/auth_feature/domain/use_case/register_use_case.dart';
 
 class RegisterController extends GetxController {
   // static RegisterController get instance => Get.find();
 
-  RegisterUseCase _registerUseCase;
+  final RegisterUseCase _registerUseCase;
 
   RegisterController(this._registerUseCase);
 
