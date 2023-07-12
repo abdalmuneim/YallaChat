@@ -12,7 +12,7 @@ class CustomText extends StatelessWidget {
     this.maxLines,
     this.overflow,
   }) : super(key: key);
-  final String text;
+  final String? text;
   final double? fontSize;
   final int? maxLines;
   final Color? color;
@@ -22,7 +22,7 @@ class CustomText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      text,
+      text ?? '',
       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             fontSize: fontSize,
             color: color,

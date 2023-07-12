@@ -45,3 +45,11 @@ class EmptyCacheFailure extends Failure {
 
   List<Object?> get props => [];
 }
+
+class ExceptionFailure extends Failure {
+  ExceptionFailure({
+    required super.message,
+  });
+
+  List<Object?> get props => [];
+}

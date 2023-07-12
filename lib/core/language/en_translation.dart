@@ -11,6 +11,7 @@ final Map<String, String> en = {
   'labelPhone': 'Phone',
   'hintPhone': '123456789',
   'createAccount': 'Create Account',
+  'chat': 'Chat',
 
   /// register
   'register': 'Register',

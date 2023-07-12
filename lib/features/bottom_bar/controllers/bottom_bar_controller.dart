@@ -1,10 +1,10 @@
-import 'package:yalla_chat/features/bottom_bar/presentations/messages_feature/view/messages_view.dart';
+import 'package:yalla_chat/features/bottom_bar/presentations/rooms_feature/view/rooms_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BottomBarController extends GetxController {
   final List<Widget> _pages = [
-    const MessagesView(),
+    const RoomsView(),
     const Scaffold(body: Center(child: Text('call'))),
     const Scaffold(body: Center(child: Text('camera'))),
     const Scaffold(body: Center(child: Text('setting'))),

@@ -1,20 +1,17 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:yalla_chat/core/language/app_translations.dart';
 import 'package:yalla_chat/core/resources/app_constants.dart';
+import 'package:yalla_chat/core/resources/toast_manager.dart';
 import 'package:yalla_chat/core/routes/app_pages.dart';
 import 'package:yalla_chat/core/util/fields.dart';
 import 'package:yalla_chat/core/util/utils.dart';
 
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yalla_chat/features/auth_feature/domain/use_case/register_use_case.dart';
 
 class RegisterController extends GetxController {
-  // static RegisterController get instance => Get.find();
-
   final RegisterUseCase _registerUseCase;
 
   RegisterController(this._registerUseCase);
@@ -39,8 +36,8 @@ class RegisterController extends GetxController {
   }
 
   /// change country code
-  changeCountryCode(Country country) {
-    countryCode = '+${country.phoneCode}';
+  changeCountryCode(String country) {
+    countryCode = '+$country';
     update();
   }
 
@@ -53,44 +50,26 @@ class RegisterController extends GetxController {
       photoError = LocaleKeys.imageValidation.tr;
       update();
     } else {
-      await _registerUseCase(
+      final result = await _registerUseCase(
         userPhone: '$countryCode${phoneCtrl.text.trim()}',
       );
-      isLoading = false;
-      update();
-      Get.toNamed(
-        Routes.otp,
-        arguments: {
-          Fields.userImage: userImage,
-          Fields.userName: nameCtrl.text,
-          Fields.userPhone: '$countryCode${phoneCtrl.text}',
-        },
-      );
+
+      result.fold((l) {
+        isLoading = false;
+        update();
+        ToastManager.showError(l.message);
+      }, (r) {
+        isLoading = false;
+        update();
+        Get.toNamed(
+          Routes.otp,
+          arguments: {
+            Fields.userImage: userImage,
+            Fields.userName: nameCtrl.text,
+            Fields.userPhone: '$countryCode${phoneCtrl.text}',
+          },
+        );
+      });
     }
   }
-  /*  void register() async {
-    isLoading = true;
-    update();
-    if (userImage == null) {
-      isLoading = false;
-      photoError = LocaleKeys.imageValidation.tr;
-      log('--------------> $isLoading');
-      update();
-    } else {
-      await AuthFireBase.register(
-        userPhone: '$countryCode${phoneCtrl.text.trim()}',
-      );
-      isLoading = false;
-      update();
-      Get.toNamed(
-        Routes.otp,
-        arguments: {
-          Fields.userImage: userImage,
-          Fields.userName: nameCtrl.text,
-          Fields.userPhone: '$countryCode${phoneCtrl.text}',
-        },
-      );
-    }
-  }
- */
 }

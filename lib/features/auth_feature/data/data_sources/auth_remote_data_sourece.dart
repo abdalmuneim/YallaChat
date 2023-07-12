@@ -14,9 +14,12 @@ abstract class BaseAuthRemoteDataSource {
   Future<void> register({
     required String userPhone,
   });
+  Future<void> login({
+    required String userPhone,
+  });
   Future<UserModel> verifyOTP({
     required String otp,
-    required UserModel userModel,
+    UserModel? userModel,
   });
   Future<String> uploadImageFile({
     required String phone,
@@ -62,7 +65,7 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
   @override
   Future<UserModel> verifyOTP({
     required String otp,
-    required UserModel userModel,
+    UserModel? userModel,
   }) async {
     UserCredential credential =
         await FirebaseAuth.instance.signInWithCredential(
@@ -87,43 +90,45 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
         ///
         await _addUserToCollection(
             uid: credential.user!.uid, userModel: userModel);
-      } else {
-        ToastManager.showError(LocaleKeys.welcomeBack.tr);
+        return const UserModel();
       }
+      return UserModel.fromJson(
+          AuthCollectionsFireStore().getUserData(credential.user!.uid));
+    } else {
+      return UserModel.fromMap(UserModel(
+        userId: credential.user?.uid,
+        userName: userModel?.userName,
+        userPhone: userModel?.userPhone,
+        createdAt: userModel?.createdAt,
+        userImage: userModel?.userImage,
+        aboutMe: userModel?.aboutMe,
+        chattingWith: userModel?.chattingWith,
+        updateAt: userModel?.updateAt,
+        blockedChats: userModel?.blockedChats,
+        blockedVideoCall: userModel?.blockedVideoCall,
+        blockedVoiceCall: userModel?.blockedVoiceCall,
+      ).toMap());
     }
-    return UserModel.fromMap(UserModel(
-      userId: credential.user!.uid,
-      userName: userModel.userName,
-      userPhone: userModel.userPhone,
-      createdAt: userModel.createdAt,
-      userImage: userModel.userImage,
-      aboutMe: userModel.aboutMe,
-      chattingWith: userModel.chattingWith,
-      updateAt: userModel.updateAt,
-      blockedChats: userModel.blockedChats,
-      blockedVideoCall: userModel.blockedVideoCall,
-      blockedVoiceCall: userModel.blockedVoiceCall,
-    ).toMap());
   }
 
   /// add user to collection firebase
   Future<void> _addUserToCollection({
     required String uid,
-    required UserModel userModel,
+    UserModel? userModel,
   }) async {
     await AuthCollectionsFireStore().addUserDataToFireStore(
       UserModel(
         userId: uid,
-        userName: userModel.userName,
-        userPhone: userModel.userPhone,
-        createdAt: userModel.createdAt,
-        userImage: userModel.userImage,
-        aboutMe: userModel.aboutMe,
-        chattingWith: userModel.chattingWith,
-        updateAt: userModel.updateAt,
-        blockedChats: userModel.blockedChats,
-        blockedVideoCall: userModel.blockedVideoCall,
-        blockedVoiceCall: userModel.blockedVoiceCall,
+        userName: userModel?.userName ?? "",
+        userPhone: userModel?.userPhone ?? "",
+        createdAt: userModel?.createdAt ?? "",
+        userImage: userModel?.userImage ?? "",
+        aboutMe: userModel?.aboutMe ?? "",
+        chattingWith: userModel?.chattingWith ?? "",
+        updateAt: userModel?.updateAt ?? "",
+        blockedChats: userModel?.blockedChats ?? false,
+        blockedVideoCall: userModel?.blockedVideoCall ?? false,
+        blockedVoiceCall: userModel?.blockedVoiceCall ?? false,
       ),
     );
   }
@@ -146,5 +151,28 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource {
       ToastManager.showError(LocaleKeys.error.tr);
       return '';
     }
+  }
+
+  @override
+  Future<void> login({required String userPhone}) async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: userPhone,
+      codeSent: (String verificationId, int? forceResendingToken) {
+        _verificationId = verificationId;
+        _forceResendingToken = forceResendingToken;
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        _verificationId = verificationId;
+      },
+      timeout: const Duration(seconds: AppConstants.timeOut),
+      verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
+      verificationFailed: (FirebaseAuthException error) {
+        if (error.code == Fields.invalidPhoneNumber) {
+          ToastManager.showError(LocaleKeys.timeOut.tr);
+        } else {
+          ToastManager.showError(LocaleKeys.error.tr);
+        }
+      },
+    );
   }
 }

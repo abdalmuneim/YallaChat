@@ -1,3 +1,4 @@
+import 'package:yalla_chat/core/resources/assets_manager.dart';
 import 'package:yalla_chat/core/resources/size_config.dart';
 import 'package:yalla_chat/features/auth_feature/presentations/splash/controllers/splash_controller.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,9 @@ class SplashView extends StatelessWidget {
     SizeConfig().init(context);
     return GetBuilder<SplashController>(
       builder: (controller) {
-        return const Scaffold(
+        return Scaffold(
           body: Center(
-            child: CircularProgressIndicator(),
+            child: Image.asset(AssetsManager.company),
           ),
         );
       },

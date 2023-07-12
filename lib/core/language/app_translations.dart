@@ -22,6 +22,7 @@ abstract class LocaleKeys {
   static const String labelPhone = 'labelPhone';
   static const String hintPhone = 'hintPhone';
   static const String createAccount = 'createAccount';
+  static const String chat = 'chat';
 
   /// register
   static const String register = 'register';

@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:yalla_chat/core/util/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
 
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+
 class Utils {
   static String getDateTime() {
     var dbTimeKey = DateTime.now();
@@ -93,4 +95,24 @@ class Utils {
           ),
         ),
       );
+  static List<Color> colors = [
+    const Color(0xffff6767),
+    const Color(0xff66e0da),
+    const Color(0xfff5a2d9),
+    const Color(0xfff0c722),
+    const Color(0xff6a85e5),
+    const Color(0xfffd9a6f),
+    const Color(0xff92db6e),
+    const Color(0xff73b8e5),
+    const Color(0xfffd7590),
+    const Color(0xffc78ae5),
+  ];
+
+  static Color getUserAvatarNameColor(types.User user) {
+    final index = user.id.hashCode % colors.length;
+    return colors[index];
+  }
+
+  static String getUserName(types.User user) =>
+      '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim();
 }

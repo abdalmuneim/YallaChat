@@ -8,6 +8,7 @@ import 'package:yalla_chat/core/util/fields.dart';
 import 'package:yalla_chat/core/util/utils.dart';
 import 'package:yalla_chat/features/auth_feature/data/model/user_model.dart';
 import 'package:get/get.dart';
+import 'package:yalla_chat/features/auth_feature/domain/entities/user.dart';
 import 'package:yalla_chat/features/auth_feature/domain/use_case/otp_use_case.dart';
 import 'package:yalla_chat/features/auth_feature/domain/use_case/upload_image_file_use_case.dart';
 
@@ -33,48 +34,63 @@ class OTPController extends GetxController {
   final Rx<Timer> _timer = Rx(Timer(Duration.zero, () {}));
 
   verifyCode() async {
-    isLoading = true;
-    update();
     if (otp.value == '') {
-      isLoading = false;
-      update();
       ToastManager.showError(LocaleKeys.enterOTP.tr);
     } else {
-      final userImgURL = await _uploadImageFileUseCase(
-          userPhone: phone, userImage: Get.arguments[Fields.userImage]);
+      isLoading = true;
+      update();
 
-      userImgURL.fold((l) {
-        isLoading = false;
-        update();
-        ToastManager.showError(LocaleKeys.error);
-      }, (r) async {
-        print(r);
-        final verifying = await _otpUseCase(
-          otp: otp.value,
-          userModel: UserModel(
-            userName: Get.arguments[Fields.userName],
-            userPhone: Get.arguments[Fields.userPhone],
-            createdAt: Utils.getDateTime(),
-            userImage: r,
-            aboutMe: 'Bio',
-            chattingWith: '',
-            updateAt: '',
-            blockedChats: false,
-            blockedVideoCall: false,
-            blockedVoiceCall: false,
-          ),
-        );
-        verifying.fold((failure) {
-          ToastManager.showError(LocaleKeys.error.tr);
+      // TODO: USE LOGIN BOOL TO CHECK IF LOGIN OR REGISTER
+
+      if (Get.arguments[Fields.userImage] == null) {
+        final ver = await _otpUseCase(otp: otp.value);
+        ver.fold((l) {
           isLoading = false;
           update();
-        }, (success) async {
-          print(success);
+          ToastManager.showError(l.message);
+        }, (User r) {
+          print("--------user-------->$r");
+          isLoading = false;
+          update();
           Get.offAllNamed(Routes.bottom);
+        });
+      } else {
+        final userImgURL = await _uploadImageFileUseCase(
+            userPhone: phone, userImage: Get.arguments[Fields.userImage]);
+
+        userImgURL.fold((l) {
           isLoading = false;
           update();
+          ToastManager.showError(l.message);
+        }, (String r) async {
+          final verifying = await _otpUseCase(
+            otp: otp.value,
+            userModel: UserModel(
+              userName: Get.arguments[Fields.userName],
+              userPhone: Get.arguments[Fields.userPhone],
+              createdAt: Utils.getDateTime(),
+              userImage: r,
+              aboutMe: 'Bio',
+              chattingWith: '',
+              updateAt: '',
+              blockedChats: false,
+              blockedVideoCall: false,
+              blockedVoiceCall: false,
+            ),
+          );
+          verifying.fold((failure) {
+            isLoading = false;
+            update();
+            ToastManager.showError(failure.message);
+          }, (User success) async {
+            print("--------user-------->$success");
+
+            isLoading = false;
+            update();
+            Get.offAllNamed(Routes.bottom);
+          });
         });
-      });
+      }
     }
   }
 
@@ -94,9 +110,13 @@ class OTPController extends GetxController {
     });
   }
 
+  autoCompleteOTP() {
+    otp.value;
+  }
+
   @override
   void onInit() {
-    // phone = Get.arguments[Fields.userPhone];
+    print('object');
     _startTimer();
     super.onInit();
   }

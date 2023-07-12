@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:yalla_chat/core/language/app_translations.dart';
 import 'package:yalla_chat/core/resources/colors_manager.dart';
 import 'package:yalla_chat/core/services/extenions.dart';
@@ -53,17 +54,24 @@ class OtpView extends GetView<OTPController> {
                 /// otp text form
                 OtpTextField(
                   numberOfFields: 6,
+                  keyboardType: TextInputType.number,
+                  handleControllers: (controllers) => <TextEditingController>[],
                   borderColor: const Color(0xFF512DA8),
+                  borderWidth: 2,
+                  disabledBorderColor: const Color(0xFF512DA8),
+                  enabledBorderColor: const Color(0xFF512DA8),
+
                   showFieldAsBox: true,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+                  ],
                   onCodeChanged: (String code) {
                     controller.otp.value = code;
-                    print('controller OTP: ${controller.otp.value}');
-                    print('code: $code');
                   },
                   onSubmit: (String verificationCode) {
                     controller.otp.value = verificationCode;
-
                     FocusManager.instance.primaryFocus?.unfocus();
+                    controller.verifyCode();
                   }, // end onSubmit
                 ),
                 const SizedBox(height: 10),
@@ -75,8 +83,8 @@ class OtpView extends GetView<OTPController> {
                 ),
                 CustomText(text: controller.timeOut),
                 const SizedBox(height: 50),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
                   child: CustomElevatedButton(
                     onPressed: controller.isLoading
                         ? () {}

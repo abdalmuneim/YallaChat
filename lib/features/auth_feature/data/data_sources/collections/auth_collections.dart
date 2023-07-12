@@ -12,6 +12,10 @@ class AuthCollectionsFireStore {
         .set(userModel.toMap());
   }
 
+  String getUserData(String uid) {
+    return _userCollectionReference.doc(uid).get().toString();
+  }
+
   Future<void> updateUserDataToFireStore(UserModel userModel) async {
     return await _userCollectionReference
         .doc(userModel.userId.toString())

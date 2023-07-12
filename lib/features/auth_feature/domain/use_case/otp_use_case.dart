@@ -10,7 +10,7 @@ class OTPUseCase {
   OTPUseCase({required this.baseAuthRepository});
 
   Future<Either<Failure, User>> call(
-      {required String otp, required UserModel userModel}) async {
+      {required String otp, UserModel? userModel}) async {
     return await baseAuthRepository.verifyOTP(otp: otp, userModel: userModel);
   }
 }

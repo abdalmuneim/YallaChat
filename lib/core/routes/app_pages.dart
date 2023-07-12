@@ -11,14 +11,14 @@ import 'package:yalla_chat/features/auth_feature/presentations/splash/bindings/s
 import 'package:yalla_chat/features/auth_feature/presentations/splash/views/splash_view.dart';
 import 'package:yalla_chat/features/bottom_bar/binding/bottom_bar_binding.dart';
 import 'package:yalla_chat/features/bottom_bar/presentations/bottom_bar_view.dart';
-import 'package:yalla_chat/features/bottom_bar/presentations/messages_feature/bindings/messages_binding.dart';
+import 'package:yalla_chat/features/bottom_bar/presentations/rooms_feature/bindings/rooms_binding.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static String initial = Routes.register;
+  static String initial = Routes.splash;
 
   /// initial rout
 

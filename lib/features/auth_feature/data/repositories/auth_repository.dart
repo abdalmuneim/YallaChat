@@ -25,8 +25,12 @@ class AuthRepository implements BaseAuthRepository {
     required String userPhone,
   }) async {
     if (await networkInfo.isConnected) {
-      await baseAuthRemoteDataSource.register(userPhone: userPhone);
-      return const Right(true);
+      try {
+        await baseAuthRemoteDataSource.register(userPhone: userPhone);
+        return const Right(true);
+      } catch (e) {
+        return Left((ExceptionFailure(message: e.toString())));
+      }
     } else {
       return const Left(NetworkFailure());
     }
@@ -35,7 +39,7 @@ class AuthRepository implements BaseAuthRepository {
   @override
   Future<Either<Failure, UserModel>> verifyOTP({
     required String otp,
-    required UserModel userModel,
+    UserModel? userModel,
   }) async {
     if (await networkInfo.isConnected) {
       final UserModel user = await baseAuthRemoteDataSource.verifyOTP(
@@ -51,9 +55,19 @@ class AuthRepository implements BaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> login() {
-    // TODO: implement login
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> login({
+    required String userPhone,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await baseAuthRemoteDataSource.login(userPhone: userPhone);
+        return const Right(true);
+      } catch (e) {
+        return Left((ExceptionFailure(message: e.toString())));
+      }
+    } else {
+      return const Left(NetworkFailure());
+    }
   }
 
   @override

@@ -5,13 +5,15 @@ import 'package:yalla_chat/features/auth_feature/data/model/user_model.dart';
 import 'package:yalla_chat/features/auth_feature/domain/entities/user.dart';
 
 abstract class BaseAuthRepository {
-  Future<Either<Failure, bool>> login();
+  Future<Either<Failure, bool>> login({
+    required String userPhone,
+  });
   Future<Either<Failure, bool>> register({
     required String userPhone,
   });
   Future<Either<Failure, User>> verifyOTP({
     required String otp,
-    required UserModel userModel,
+    UserModel? userModel,
   });
   Future<Either<Failure, User>> getUser();
 
